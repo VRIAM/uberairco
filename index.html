@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UberAirco | Airconditioning & Pompen Specialist Rotterdam</title>
+    <meta name="description" content="STEK-gecertificeerd airconditioning en waterpomp specialist in Rotterdam. Installatie, reparatie en onderhoud. Binnen 24 uur reactie. Bel of start een chat.">
+    <style>
+        :root {
+            --primary: #1a5276;
+            --primary-dark: #0e3a54;
+            --accent: #e67e22;
+            --accent-hover: #d35400;
+            --light-bg: #f4f6f7;
+            --white: #ffffff;
+            --text: #2c3e50;
+            --text-light: #5d6d7e;
+            --border: #bdc3c7;
+            --success: #27ae60;
+            --shadow: 0 2px 8px rgba(0,0,0,0.15);
+            --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            /* Prevent horizontal scroll */
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        html {
+            background: var(--primary);
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--light-bg);
+            /* Reduced top padding for mobile */
+            padding-top: 20px;
+            width: 100%;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                padding-top: 0;
+            }
+        }
+        
+        /* Ensure all sections don't overflow */
+        section, header, footer, div {
+            max-width: 100%;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            overflow-x: hidden;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: var(--white);
+        }
+
+        .logo h1 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hamburger {
+            background: none;
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1.2rem;
+        }
+
+        .desktop-nav { display: none; }
+
+        /* Mobile Navigation */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s;
+            z-index: 200;
+        }
+        .nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--white);
+            transition: right 0.3s;
+            z-index: 201;
+        }
+        .mobile-nav.active { right: 0; }
+
+        .nav-header {
+            background: var(--primary);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-header h2 { color: var(--white); font-family: var(--font-heading); font-weight: 600; }
+        .close-nav { background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
+
+        .mobile-nav ul { list-style: none; }
+        .mobile-nav li { border-bottom: 1px solid var(--border); }
+        .mobile-nav a { display: block; padding: 16px 20px; color: var(--text); text-decoration: none; font-weight: 600; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 40px 16px 50px;
+            text-align: center;
+            color: var(--white);
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+        .hero h2 {
+            font-family: var(--font-heading);
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 14px 32px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        /* Trust badges in hero */
+        .hero-badges {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .trust-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .trust-badge.highlight {
+            background: var(--success);
+        }
+
+        /* Region banner */
+        .region-banner {
+            background: var(--primary-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow-x: hidden;
+        }
+        .region-banner strong { color: var(--accent); }
+
+        /* Sections */
+        section {
+            padding: 50px 16px;
+            overflow-x: hidden;
+        }
+        
+        section > * {
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+        }
+
+        /* USP Section */
+        .usp-section {
+            background: var(--white);
+        }
+        .usp-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .usp-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .usp-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .usp-content h3 {
+            font-size: 1.05rem;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+        .usp-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* About / Intro section */
+        .about-section {
+            background: var(--light-bg);
+        }
+        .about-content {
+            display: grid;
+            gap: 30px;
+        }
+        .about-text p {
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        .about-image {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+        }
+        .about-image .van-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+        .about-image span {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Workflow */
+        .workflow-section {
+            background: var(--white);
+        }
+        .workflow-steps {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 24px;
+            top: 54px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: var(--border);
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .step-content h3 {
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        .step-benefit {
+            display: inline-block;
+            background: #e8f6e9;
+            color: var(--success);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Services */
+        .services-section {
+            background: var(--light-bg);
+        }
+        .services-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .service-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        .service-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+        }
+        .service-card h3 {
+            font-size: 1.15rem;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+        .service-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+        .service-card ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .service-card li {
+            padding: 5px 0 5px 20px;
+            position: relative;
+        }
+        .service-card li::before {
+            content: "✓";
+            color: var(--success);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Pricing indication */
+        .pricing-section {
+            background: var(--white);
+        }
+        .pricing-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .pricing-card {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+        }
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+        .pricing-card.featured::before {
+            content: "Populair";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .pricing-card h3 {
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+        .pricing-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .pricing-amount span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        .pricing-note {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        .pricing-features {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text);
+            text-align: left;
+        }
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light-bg);
+        }
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Brands */
+        .brands-section {
+            background: var(--light-bg);
+            text-align: center;
+        }
+        .brands-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .brand-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 24px;
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        /* Certifications */
+        .cert-section {
+            background: var(--primary-dark);
+            color: var(--white);
+            text-align: center;
+        }
+        .cert-section .section-title {
+            color: var(--white);
+        }
+        .cert-section .section-subtitle {
+            color: rgba(255,255,255,0.7);
+        }
+        .cert-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+        .cert-item {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 20px 28px;
+            text-align: center;
+        }
+        .cert-item .cert-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+        .cert-item h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .cert-item p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Service Area */
+        .area-section {
+            background: var(--white);
+        }
+        .area-content {
+            display: grid;
+            gap: 24px;
+        }
+        .area-text p {
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .area-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .area-tag {
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text);
+        }
+        .area-map {
+            background: var(--light-bg);
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 3rem;
+        }
+
+        /* FAQ */
+        .faq-section {
+            background: var(--light-bg);
+        }
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .faq-question {
+            width: 100%;
+            background: var(--white);
+            border: none;
+            padding: 18px 20px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question:hover {
+            background: var(--light-bg);
+        }
+        .faq-toggle {
+            font-size: 1.3rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+        .faq-answer-content {
+            padding: 0 20px 18px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        /* Payment info */
+        .payment-section {
+            background: var(--white);
+        }
+        .payment-content {
+            text-align: center;
+        }
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+        .payment-method {
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 24px;
+            text-align: center;
+        }
+        .payment-method .icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .payment-method span {
+            font-size: 0.85rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .payment-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Final CTA */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 50px 16px;
+            overflow-x: hidden;
+        }
+        .cta-section h2 {
+            font-family: var(--font-heading);
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .cta-section p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-button-light {
+            display: inline-block;
+            background: var(--white);
+            color: var(--accent);
+            padding: 14px 32px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .response-promise {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .response-promise strong {
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            padding: 40px 16px 140px;
+            overflow-x: hidden;
+        }
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .footer-main {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-brand h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .footer-brand .tagline {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .footer-brand p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .footer-links h4 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        .footer-links ul {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .footer-links a:hover {
+            color: var(--white);
+        }
+        .footer-contact p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .footer-legal {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+        .footer-legal a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+        }
+        .footer-company {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Mobile Chat Bar */
+        .mobile-chat-bar {
+            position: fixed;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            background: var(--accent);
+            padding: 16px 20px;
+            z-index: 150;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        body.chat-open .mobile-chat-bar {
+            display: none;
+        }
+        .mobile-chat-bar svg { width: 22px; height: 22px; fill: var(--white); }
+        .mobile-chat-bar span { color: var(--white); font-weight: 700; font-size: 1rem; }
+        .mobile-chat-bar .pulse {
+            width: 10px; height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Chat Dialog */
+        .chat-dialog {
+            margin: 0;
+            border: none;
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            padding: 20px 0 50px 0;
+            background: linear-gradient(
+                to bottom,
+                var(--primary) 0px,
+                var(--primary) 20px,
+                var(--white) 20px,
+                var(--white) 100%
+            );
+            overflow-x: hidden;
+        }
+        .chat-dialog::backdrop {
+            background: rgba(0,0,0,0.5);
+        }
+        .chat-dialog[open] {
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        .chat-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .chat-header h3 { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; }
+        .chat-header span { font-size: 0.8rem; opacity: 0.8; }
+        .close-chat {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0 8px;
+            line-height: 1;
+        }
+        .chat-scroll {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--light-bg);
+            padding: 16px;
+        }
+        .message { margin-bottom: 16px; max-width: 85%; }
+        .message.bot { margin-right: auto; }
+        .message.user { margin-left: auto; }
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+        .message.bot .message-content {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        .message.user .message-content {
+            background: var(--primary);
+            color: var(--white);
+            border-bottom-right-radius: 4px;
+        }
+        .chat-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .chat-option {
+            background: var(--white);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 14px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: left;
+        }
+        .chat-input-wrap {
+            display: none;
+            padding: 16px;
+            background: var(--white);
+            border-top: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+        .chat-input-wrap.active { display: block; }
+        .chat-input-row { display: flex; gap: 10px; }
+        .chat-input-field {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .chat-input-field:focus { outline: none; border-color: var(--primary); }
+        .chat-send-btn {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            .desktop-nav { display: flex; gap: 24px; }
+            .desktop-nav a { color: var(--white); text-decoration: none; font-weight: 600; opacity: 0.9; font-size: 0.9rem; }
+            
+            .hero { padding: 60px 24px 70px; }
+            .hero h2 { font-size: 2.4rem; }
+            
+            section { padding: 60px 24px; }
+            .section-title { font-size: 1.8rem; }
+            
+            .usp-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-content { grid-template-columns: 1fr 1fr; align-items: center; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+            .area-content { grid-template-columns: 1fr 1fr; align-items: center; }
+            
+            footer { padding-bottom: 40px; }
+            .footer-main { grid-template-columns: 2fr 1fr 1fr; }
+            .footer-bottom { flex-direction: row; justify-content: space-between; }
+            
+            .mobile-chat-bar { display: none !important; }
+            
+            .desktop-chat-btn {
+                display: block;
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                z-index: 150;
+            }
+            .desktop-chat-btn button {
+                width: 64px; height: 64px;
+                background: var(--accent);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 4px 16px rgba(230,126,34,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .desktop-chat-btn svg { width: 28px; height: 28px; fill: var(--white); }
+            body.chat-open .desktop-chat-btn { display: none; }
+
+            .chat-dialog {
+                position: fixed;
+                top: auto;
+                left: auto;
+                right: 24px;
+                bottom: 100px;
+                width: 400px;
+                height: 550px;
+                border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+                overflow: hidden;
+                padding: 0;
+                background: var(--white);
+            }
+        }
+        @media (max-width: 767px) {
+            .desktop-chat-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>UBERAIRCO</h1>
+                <span>Airco & Pomp Specialist</span>
+            </div>
+            <nav class="desktop-nav">
+                <a href="#diensten">Diensten</a>
+                <a href="#tarieven">Tarieven</a>
+                <a href="#werkgebied">Werkgebied</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <button class="hamburger" onclick="toggleNav()">☰</button>
+        </div>
+    </header>
+
+    <div class="nav-overlay" onclick="toggleNav()"></div>
+    <nav class="mobile-nav">
+        <div class="nav-header">
+            <h2>Menu</h2>
+            <button class="close-nav" onclick="toggleNav()">×</button>
+        </div>
+        <ul>
+            <li><a href="#diensten" onclick="toggleNav()">Diensten</a></li>
+            <li><a href="#tarieven" onclick="toggleNav()">Tarieven</a></li>
+            <li><a href="#werkgebied" onclick="toggleNav()">Werkgebied</a></li>
+            <li><a href="#faq" onclick="toggleNav()">Veelgestelde Vragen</a></li>
+            <li><a href="#" onclick="openChat(); toggleNav();">Start Afspraak</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">⚡ Reactie binnen 24 uur</div>
+        <h2>Airconditioning & Pompen<br>Specialist Rotterdam</h2>
+        <p>STEK-gecertificeerde monteurs voor installatie, reparatie en onderhoud. Eerlijke prijzen, vakkundige service.</p>
+        <button class="cta-button" onclick="openChat()">▶ Plan een afspraak</button>
+        
+        <div class="hero-badges">
+            <div class="badge-row">
+                <span class="trust-badge highlight">✓ STEK Gecertificeerd</span>
+                <span class="trust-badge">✓ F-gassen bevoegd</span>
+            </div>
+            <div class="badge-row">
+                <span class="trust-badge">✓ Binnen 24u reactie</span>
+                <span class="trust-badge">✓ PIN betaling</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="region-banner">📍 Actief in <strong>Rotterdam, Schiedam, Capelle, Vlaardingen, Barendrecht</strong> en omgeving</div>
+
+    <!-- USP Section -->
+    <section class="usp-section">
+        <h2 class="section-title">Waarom UberAirco?</h2>
+        <p class="section-subtitle">Wat ons anders maakt</p>
+        
+        <div class="usp-grid">
+            <div class="usp-item">
+                <div class="usp-icon">🎯</div>
+                <div class="usp-content">
+                    <h3>Slimme Diagnose Vooraf</h3>
+                    <p>Via onze chat verzamelen we informatie vóór het bezoek. Zo komt de monteur voorbereid en bespaart u op arbeidskosten.</p>
+                </div>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">🏆</div>
+                <div class="usp-content">
+                    <h3>Gecertificeerde Vakmensen</h3>
+                    <p>Al onze monteurs zijn STEK-gecertificeerd en bevoegd voor F-gassen. Uw installatie in deskundige handen.</p>
+                </div>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">💰</div>
+                <div class="usp-content">
+                    <h3>Transparante Prijzen</h3>
+                    <p>Geen verrassingen achteraf. U weet vooraf wat de kosten zijn. Betalen kan direct via PIN.</p>
+                </div>
+            </div>
+            <div class="usp-item">
+                <div class="usp-icon">⚡</div>
+                <div class="usp-content">
+                    <h3>Snelle Reactie</h3>
+                    <p>Binnen 24 uur nemen wij contact op. Bij spoed streven we naar service dezelfde of volgende werkdag.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about-section">
+        <h2 class="section-title">Over UberAirco</h2>
+        <p class="section-subtitle">Uw lokale specialist sinds 2019</p>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <p>UberAirco is ontstaan uit de overtuiging dat airconditioning- en pompservice slimmer en klantvriendelijker kan. Gevestigd in Rotterdam bedienen wij particulieren en bedrijven in de hele regio.</p>
+                <p>Ons team bestaat uit ervaren, gecertificeerde monteurs die zich specialiseren in klimaattechniek en watertechniek. Of het nu gaat om een nieuwe airco-installatie, een storing aan uw warmtepomp, of onderhoud aan uw waterpomp – wij staan voor u klaar.</p>
+                <p>Door vooraf informatie te verzamelen via onze digitale assistent, kunnen wij efficiënter werken. Dit bespaart u tijd én geld, zonder in te leveren op kwaliteit.</p>
+            </div>
+            <div class="about-image">
+                <div class="van-icon">🚐</div>
+                <span>Onze servicewagens staan klaar in Rotterdam</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow -->
+    <section class="workflow-section" id="werkwijze">
+        <h2 class="section-title">Hoe Werkt Het?</h2>
+        <p class="section-subtitle">In 3 stappen geholpen</p>
+        
+        <div class="workflow-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Start de Chat</h3>
+                    <p>Beantwoord enkele vragen over uw situatie, type apparaat en locatie. Onze digitale assistent verzamelt de benodigde informatie.</p>
+                    <span class="step-benefit">✓ 24/7 beschikbaar</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Bevestiging & Planning</h3>
+                    <p>Binnen 24 uur neemt onze planner telefonisch contact op om de details te bespreken en een afspraak in te plannen die u uitkomt.</p>
+                    <span class="step-benefit">✓ Reactie binnen 24 uur</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Vakkundige Service</h3>
+                    <p>De monteur arriveert op de afgesproken tijd, volledig op de hoogte van uw situatie en met de juiste materialen bij de hand.</p>
+                    <span class="step-benefit">✓ Voorbereid = efficiënter = goedkoper</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services-section" id="diensten">
+        <h2 class="section-title">Onze Diensten</h2>
+        <p class="section-subtitle">Complete service voor klimaat en waterhuishouding</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">❄️</div>
+                <h3>Airconditioning</h3>
+                <p>Van installatie tot onderhoud en reparatie van alle merken airconditioners en warmtepompen.</p>
+                <ul>
+                    <li>Nieuwe installaties (split & multi-split)</li>
+                    <li>Koelmiddel bijvullen (R32, R410A)</li>
+                    <li>Storingen & reparaties</li>
+                    <li>Periodiek onderhoud</li>
+                    <li>Warmtepompen</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💧</div>
+                <h3>Waterpompen</h3>
+                <p>Installatie, reparatie en onderhoud van bronpompen, regenwaterpompen en drukverhogingsinstallaties.</p>
+                <ul>
+                    <li>Bronpompen & putten</li>
+                    <li>Regenwateropvang systemen</li>
+                    <li>Drukverhogingssets</li>
+                    <li>Lekkage opsporen & repareren</li>
+                    <li>Pomp vervanging</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📋</div>
+                <h3>Onderhoudscontracten</h3>
+                <p>Voorkom storingen met regelmatig onderhoud. Contractklanten krijgen voorrang bij spoedgevallen.</p>
+                <ul>
+                    <li>Jaarlijkse inspectie & reiniging</li>
+                    <li>Filtervervanging</li>
+                    <li>Prestatiecontrole</li>
+                    <li>Voorrangsstatus bij storingen</li>
+                    <li>10% korting op onderdelen</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔧</div>
+                <h3>Reparatie & Storing</h3>
+                <p>Airco blaast niet koud? Pomp slaat niet aan? Wij lossen het op, snel en vakkundig.</p>
+                <ul>
+                    <li>Diagnose ter plaatse</li>
+                    <li>Lekkage detectie</li>
+                    <li>Elektrische storingen</li>
+                    <li>Compressor problemen</li>
+                    <li>Advies vervanging vs. reparatie</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing-section" id="tarieven">
+        <h2 class="section-title">Indicatieve Tarieven</h2>
+        <p class="section-subtitle">Transparante prijzen, geen verrassingen</p>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Voorrijkosten</h3>
+                <div class="pricing-amount">€45</div>
+                <div class="pricing-note">Eenmalig, inclusief eerste 30 min</div>
+                <ul class="pricing-features">
+                    <li>✓ Inclusief diagnose</li>
+                    <li>✓ Binnen regio Rotterdam</li>
+                    <li>✓ Vervalt bij opdracht >€200</li>
+                </ul>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Uurtarief</h3>
+                <div class="pricing-amount">€55 <span>/ uur</span></div>
+                <div class="pricing-note">Arbeid na eerste 30 minuten</div>
+                <ul class="pricing-features">
+                    <li>✓ Per kwartier afgerekend</li>
+                    <li>✓ Materialen apart</li>
+                    <li>✓ Geen BTW-verrassingen</li>
+                </ul>
+            </div>
+            <div class="pricing-card">
+                <h3>Onderhoudsbeurt</h3>
+                <div class="pricing-amount">€95</div>
+                <div class="pricing-note">Complete airco-onderhoudsbeurt</div>
+                <ul class="pricing-features">
+                    <li>✓ Reiniging filters & unit</li>
+                    <li>✓ Controle koelmiddel</li>
+                    <li>✓ Prestatie-check</li>
+                </ul>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 24px; font-size: 0.85rem; color: var(--text-light);">* Prijzen zijn indicatief en inclusief BTW. Exacte offerte na intake.</p>
+    </section>
+
+    <!-- Brands -->
+    <section class="brands-section">
+        <h2 class="section-title">Merken & Expertise</h2>
+        <p class="section-subtitle">Wij werken met alle gangbare merken</p>
+        
+        <div class="brands-grid">
+            <div class="brand-item">Daikin</div>
+            <div class="brand-item">Mitsubishi</div>
+            <div class="brand-item">Samsung</div>
+            <div class="brand-item">LG</div>
+            <div class="brand-item">Toshiba</div>
+            <div class="brand-item">Panasonic</div>
+            <div class="brand-item">Fujitsu</div>
+            <div class="brand-item">Grundfos</div>
+            <div class="brand-item">DAB</div>
+        </div>
+    </section>
+
+    <!-- Certifications -->
+    <section class="cert-section">
+        <h2 class="section-title">Certificeringen</h2>
+        <p class="section-subtitle">Erkend en gecertificeerd voor uw veiligheid</p>
+        
+        <div class="cert-grid">
+            <div class="cert-item">
+                <div class="cert-icon">🏅</div>
+                <h4>STEK Gecertificeerd</h4>
+                <p>Erkend koeltechnisch bedrijf</p>
+            </div>
+            <div class="cert-item">
+                <div class="cert-icon">🌿</div>
+                <h4>F-gassen Bevoegd</h4>
+                <p>EU 517/2014 compliant</p>
+            </div>
+            <div class="cert-item">
+                <div class="cert-icon">⚡</div>
+                <h4>NEN 1010</h4>
+                <p>Elektrische installaties</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Area -->
+    <section class="area-section" id="werkgebied">
+        <h2 class="section-title">Werkgebied</h2>
+        <p class="section-subtitle">Actief in Rotterdam en wijde omgeving</p>
+        
+        <div class="area-content">
+            <div class="area-text">
+                <p>UberAirco bedient Rotterdam en de directe omgeving binnen een straal van circa 15-20 kilometer. Dit stelt ons in staat om snel ter plaatse te zijn en efficiënt te werken.</p>
+                <p>Twijfelt u of uw locatie binnen ons werkgebied valt? Start de chat en voer uw postcode in – onze assistent controleert dit direct voor u.</p>
+                
+                <div class="area-list">
+                    <span class="area-tag">Rotterdam</span>
+                    <span class="area-tag">Schiedam</span>
+                    <span class="area-tag">Vlaardingen</span>
+                    <span class="area-tag">Capelle a/d IJssel</span>
+                    <span class="area-tag">Krimpen a/d IJssel</span>
+                    <span class="area-tag">Ridderkerk</span>
+                    <span class="area-tag">Barendrecht</span>
+                    <span class="area-tag">Albrandswaard</span>
+                    <span class="area-tag">Hoogvliet</span>
+                    <span class="area-tag">Spijkenisse</span>
+                </div>
+            </div>
+            <div class="area-map">📍</div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section" id="faq">
+        <h2 class="section-title">Veelgestelde Vragen</h2>
+        <p class="section-subtitle">Snel antwoord op uw vragen</p>
+        
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Waarom werkt UberAirco met een chat in plaats van telefoon?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Door vooraf de juiste informatie te verzamelen, kan onze monteur beter voorbereid komen. Dit betekent minder tijd kwijt aan uitzoeken ter plaatse, wat u arbeidskosten bespaart. Bovendien kunt u op elk moment van de dag een aanvraag indienen.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Hoe snel kan een monteur langskomen?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Na uw aanvraag neemt onze planner binnen 24 uur contact met u op. Afhankelijk van de drukte kunnen we vaak binnen 1-3 werkdagen een afspraak maken. Klanten met een onderhoudscontract krijgen voorrang bij spoedgevallen.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Wat als het probleem ter plaatse anders blijkt?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">De monteur stelt altijd eerst een diagnose. Blijkt het probleem complexer of anders dan verwacht, dan bespreekt hij dit met u inclusief de bijbehorende kosten, vóórdat er verder gewerkt wordt. U houdt altijd de controle.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Hoe kan ik betalen?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Betaling vindt plaats direct na afronding van de werkzaamheden. U kunt pinnen bij de monteur. Voor grotere projecten of zakelijke klanten is betaling op factuur mogelijk in overleg.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Plaatsen jullie ook nieuwe airconditioning?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Ja, wij verzorgen complete installaties van airconditioners en warmtepompen. Na een intake (via chat of ter plaatse) ontvangt u een vrijblijvende offerte op maat. Wij werken met alle gangbare merken zoals Daikin, Mitsubishi en Samsung.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Zijn jullie verzekerd?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">Ja, UberAirco is volledig verzekerd met een bedrijfs- en aansprakelijkheidsverzekering. U kunt met een gerust hart ons team in uw woning of bedrijfspand toelaten.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment -->
+    <section class="payment-section">
+        <h2 class="section-title">Betaalmogelijkheden</h2>
+        <p class="section-subtitle">Eenvoudig afrekenen na de klus</p>
+        
+        <div class="payment-content">
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <div class="icon">💳</div>
+                    <span>PIN / Betaalpas</span>
+                </div>
+                <div class="payment-method">
+                    <div class="icon">📱</div>
+                    <span>Contactloos</span>
+                </div>
+                <div class="payment-method">
+                    <div class="icon">📄</div>
+                    <span>Factuur*</span>
+                </div>
+            </div>
+            <p class="payment-note">* Betaling op factuur mogelijk voor zakelijke klanten en projecten boven €500, in overleg.</p>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <h2>Klaar om te starten?</h2>
+        <p>Plan direct een afspraak via onze chat. Wij nemen binnen 24 uur contact met u op.</p>
+        <button class="cta-button-light" onclick="openChat()">▶ Start nu een afspraak</button>
+        <div class="response-promise">
+            <strong>⚡ Reactie binnen 24 uur gegarandeerd</strong>
+            Op werkdagen vóór 17:00 aangevraagd = dezelfde dag nog bericht
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <h3>UBERAIRCO</h3>
+                    <div class="tagline">Airco & Pomp Specialist — Rotterdam</div>
+                    <p>📍 Werkgebied: Rotterdam en omgeving (15 km)</p>
+                    <p>🕐 Ma-Vr: 08:00 - 18:00 | Za: 09:00 - 14:00</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Navigatie</h4>
+                    <ul>
+                        <li><a href="#diensten">Diensten</a></li>
+                        <li><a href="#tarieven">Tarieven</a></li>
+                        <li><a href="#werkgebied">Werkgebied</a></li>
+                        <li><a href="#faq">Veelgestelde vragen</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p>💬 Start een chat voor afspraken</p>
+                    <p>📧 info@uberairco.nl</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    © 2025 UberAirco. Alle rechten voorbehouden. | <a href="#">Algemene Voorwaarden</a> | <a href="#">Privacy</a>
+                </div>
+                <div class="footer-company">
+                    KvK: 87654321 | BTW: NL862456789B01
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Chat Bar -->
+    <div class="mobile-chat-bar" onclick="openChat()">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        <span>Plan een afspraak</span>
+        <div class="pulse"></div>
+    </div>
+
+    <!-- Desktop Chat Button -->
+    <div class="desktop-chat-btn">
+        <button onclick="openChat()">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        </button>
+    </div>
+
+    <!-- Chat Dialog -->
+    <dialog class="chat-dialog" id="chatDialog">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div>
+                    <h3>UberAirco Assistent</h3>
+                    <span>Online — antwoordt direct</span>
+                </div>
+                <button class="close-chat" onclick="closeChat()">×</button>
+            </div>
+            <div class="chat-scroll" id="chatScroll">
+                <div id="chatMessages"></div>
+            </div>
+            <div class="chat-input-wrap" id="chatInputWrap">
+                <div class="chat-input-row">
+                    <input type="text" class="chat-input-field" id="chatInputField" placeholder="Typ uw postcode..." autocomplete="off">
+                    <button class="chat-send-btn" onclick="sendPostcode()">Verstuur</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        function toggleNav() {
+            document.querySelector('.nav-overlay').classList.toggle('active');
+            document.querySelector('.mobile-nav').classList.toggle('active');
+        }
+
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!wasActive) item.classList.add('active');
+        }
+
+        let chatState = 'initial';
+        let userData = {};
+        let scrollPos = 0;
+        const chatDialog = document.getElementById('chatDialog');
+
+        function openChat() {
+            scrollPos = window.pageYOffset;
+            chatDialog.showModal();
+            document.body.classList.add('chat-open');
+            if (chatState === 'initial') initChat();
+        }
+
+        function closeChat() {
+            chatDialog.close();
+            document.body.classList.remove('chat-open');
+            window.scrollTo(0, scrollPos);
+        }
+
+        chatDialog.addEventListener('click', function(e) {
+            if (e.target === chatDialog) closeChat();
+        });
+
+        chatDialog.addEventListener('cancel', function(e) {
+            e.preventDefault();
+            closeChat();
+        });
+
+        function initChat() {
+            document.getElementById('chatMessages').innerHTML = '';
+            addBotMessage('Welkom bij UberAirco! 👋 Ik help u snel op weg.');
+            setTimeout(() => {
+                addBotMessage('Wat kunnen wij voor u doen?', [
+                    { text: '🆕 Nieuwe installatie', value: 'install' },
+                    { text: '🔧 Reparatie of storing', value: 'repair' },
+                    { text: '📋 Onderhoud', value: 'maintenance' }
+                ]);
+            }, 500);
+        }
+
+        function addBotMessage(text, options) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'message bot';
+            let html = '<div class="message-content">' + text + '</div>';
+            if (options) {
+                html += '<div class="chat-options">';
+                options.forEach(o => {
+                    html += '<button class="chat-option" onclick="selectOption(\'' + o.value + '\',\'' + o.text.replace(/'/g, "\\'") + '\')">' + o.text + '</button>';
+                });
+                html += '</div>';
+            }
+            msg.innerHTML = html;
+            container.appendChild(msg);
+            document.getElementById('chatScroll').scrollTop = document.getElementById('chatScroll').scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'message user';
+            msg.innerHTML = '<div class="message-content">' + text + '</div>';
+            container.appendChild(msg);
+            document.getElementById('chatScroll').scrollTop = document.getElementById('chatScroll').scrollHeight;
+        }
+
+        function selectOption(value, text) {
+            document.querySelectorAll('.chat-options').forEach(el => el.remove());
+            addUserMessage(text);
+
+            if (value === 'confirm') {
+                setTimeout(() => {
+                    addBotMessage('✅ <strong>Aanvraag ontvangen!</strong><br><br>Bedankt voor uw vertrouwen in UberAirco. Wij nemen binnen 24 uur telefonisch contact met u op.<br><br>U kunt dit venster nu sluiten.');
+                    chatState = 'complete';
+                }, 500);
+                return;
+            }
+            if (value === 'restart' || value === 'retry_location') {
+                chatState = 'initial';
+                userData = {};
+                document.getElementById('chatInputWrap').classList.remove('active');
+                initChat();
+                return;
+            }
+
+            if (chatState === 'initial') {
+                userData.type = value;
+                chatState = 'category';
+                setTimeout(() => {
+                    addBotMessage('Om welk type installatie gaat het?', [
+                        { text: '❄️ Airconditioning / Warmtepomp', value: 'airco' },
+                        { text: '💧 Waterpomp', value: 'pump' }
+                    ]);
+                }, 500);
+            } else if (chatState === 'category') {
+                userData.category = value;
+                chatState = 'location';
+                setTimeout(() => {
+                    addBotMessage('Top! Wat is uw postcode? Dan controleer ik of u binnen ons werkgebied valt.');
+                    document.getElementById('chatInputWrap').classList.add('active');
+                    document.getElementById('chatInputField').focus();
+                }, 500);
+            }
+        }
+
+        function sendPostcode() {
+            const input = document.getElementById('chatInputField');
+            const postcode = input.value.trim().toUpperCase();
+            if (!postcode) return;
+
+            addUserMessage(postcode);
+            input.value = '';
+            userData.postcode = postcode;
+            document.getElementById('chatInputWrap').classList.remove('active');
+
+            const valid = ['30','31','32','28','29','26','27','33','29'].includes(postcode.substring(0,2));
+            
+            setTimeout(() => {
+                if (valid) {
+                    const svcMap = {install: 'Nieuwe installatie', repair: 'Reparatie/storing', maintenance: 'Onderhoud'};
+                    const devMap = {airco: 'Airco/warmtepomp', pump: 'Waterpomp'};
+                    addBotMessage('Uitstekend, u valt binnen ons werkgebied! 📍');
+                    setTimeout(() => {
+                        addBotMessage('<strong>Samenvatting:</strong><br>• ' + svcMap[userData.type] + '<br>• ' + devMap[userData.category] + '<br>• Postcode: ' + postcode + '<br><br>Klopt dit?', [
+                            { text: '✅ Ja, neem contact op', value: 'confirm' },
+                            { text: '🔄 Opnieuw beginnen', value: 'restart' }
+                        ]);
+                    }, 500);
+                } else {
+                    addBotMessage('Helaas, postcode ' + postcode + ' valt buiten ons werkgebied (regio Rotterdam).', [
+                        { text: '🔄 Andere postcode invoeren', value: 'retry_location' }
+                    ]);
+                }
+            }, 600);
+        }
+
+        document.getElementById('chatInputField').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); sendPostcode(); }
+        });
+    </script>
+</body>
+</html>
