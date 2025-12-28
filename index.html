@@ -1794,7 +1794,9 @@
         // Z.AI API INTEGRATION
         // =====================================================
         async function callZAI(userMessage) {
+            // Save user message to conversation history
             chatHistory.push({ role: "user", content: userMessage });
+            userData.aiSummary += `Klant: ${userMessage}\n`;
 
             // Check if we've reached the 3-message limit
             if (aiMessageCount >= 3) {
@@ -1847,7 +1849,7 @@ Als je genoeg informatie hebt (na max 2-3 vragen), zeg dan: "Ik heb voldoende in
                 const data = await response.json();
                 const aiResponse = data.choices[0].message.content;
 
-                userData.aiSummary += aiResponse + "\n";
+                userData.aiSummary += `Assistent: ${aiResponse}\n`;
                 chatHistory.push({ role: "assistant", content: aiResponse });
                 addBotMessage(aiResponse);
 
@@ -1947,12 +1949,26 @@ Als je genoeg informatie hebt (na max 2-3 vragen), zeg dan: "Ik heb voldoende in
             document.getElementById('bookingForm').innerHTML = '<p style="text-align:center; padding:20px;">Bezig met verzenden...</p>';
 
             try {
-                // Send email to admin
+                // Send email to admin with full details
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailData);
+
+                // Send confirmation email to customer
+                const customerEmailData = {
+                    to_email: userData.email,
+                    name: userData.name,
+                    device: userData.device,
+                    service: userData.service,
+                    phone: userData.phone,
+                    address: userData.address || "Niet opgegeven",
+                    postcode: userData.postcode,
+                    diagnosis: "Bedankt voor uw aanvraag. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen."
+                };
+
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, customerEmailData);
 
                 // Success message
                 document.getElementById('bookingForm').remove();
-                addBotMessage('✅ <strong>Aanvraag succesvol verzonden!</strong><br><br>Bedankt ' + name + '! Wij hebben uw aanvraag ontvangen en nemen binnen 24 uur telefonisch contact met u op.<br><br>U kunt dit venster nu sluiten.');
+                addBotMessage('✅ <strong>Aanvraag succesvol verzonden!</strong><br><br>Bedankt ' + name + '! Wij hebben uw aanvraag ontvangen en u heeft een bevestiging per e-mail ontvangen. Wij nemen binnen 24 uur telefonisch contact met u op.<br><br>U kunt dit venster nu sluiten.');
                 chatState = 'complete';
 
             } catch (error) {
