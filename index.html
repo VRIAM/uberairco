@@ -1580,8 +1580,8 @@
         // =====================================================
         // CHATBOT CONFIGURATION
         // =====================================================
-        const ZAI_KEY = "dd103b6b8df24db8b5c112e30198edff.2qmbRGko3oflbXkq";
-        const ZAI_ENDPOINT = "https://api.z.ai/paas/v4/chat/completions";
+        // Using serverless function proxy to avoid CORS and hide API key
+        const AI_ENDPOINT = "/api/chat";
 
         const EMAILJS_PUBLIC_KEY = "rsLxZ0fE16KrpTytS";
         const EMAILJS_SERVICE_ID = "service_h5zs3dz";
@@ -1828,10 +1828,9 @@ Als je genoeg informatie hebt (na max 2-3 vragen), zeg dan: "Ik heb voldoende in
             showTypingIndicator();
 
             try {
-                const response = await fetch(ZAI_ENDPOINT, {
+                const response = await fetch(AI_ENDPOINT, {
                     method: "POST",
                     headers: {
-                        "Authorization": `Bearer ${ZAI_KEY}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(payload)
@@ -1840,6 +1839,8 @@ Als je genoeg informatie hebt (na max 2-3 vragen), zeg dan: "Ik heb voldoende in
                 hideTypingIndicator();
 
                 if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
                     throw new Error(`API Error: ${response.status}`);
                 }
 

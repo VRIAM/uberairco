@@ -1,0 +1,68 @@
+// Vercel Serverless Function - z.ai API Proxy
+// This proxies requests to z.ai API to avoid CORS issues and hide API key
+
+export default async function handler(req, res) {
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    // CORS headers for browser requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle OPTIONS preflight request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    // Get the messages from the request body
+    const { messages, model, temperature } = req.body;
+
+    // Validate input
+    if (!messages || !Array.isArray(messages)) {
+        return res.status(400).json({ error: 'Invalid messages format' });
+    }
+
+    // z.ai API configuration
+    const ZAI_KEY = "dd103b6b8df24db8b5c112e30198edff.2qmbRGko3oflbXkq";
+    const ZAI_ENDPOINT = "https://api.z.ai/paas/v4/chat/completions";
+
+    try {
+        // Call z.ai API
+        const response = await fetch(ZAI_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${ZAI_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: model || 'glm-4.7',
+                messages: messages,
+                temperature: temperature || 0.7
+            })
+        });
+
+        // Check if the response is ok
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('z.ai API Error:', response.status, errorText);
+            return res.status(response.status).json({
+                error: `z.ai API Error: ${response.status}`,
+                details: errorText
+            });
+        }
+
+        // Parse and return the response
+        const data = await response.json();
+        return res.status(200).json(data);
+
+    } catch (error) {
+        console.error('Proxy Error:', error);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        });
+    }
+}
