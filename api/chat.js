@@ -25,9 +25,9 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid messages format' });
     }
 
-    // z.ai API configuration
+    // Zhipu AI (GLM) API configuration
     const ZAI_KEY = "dd103b6b8df24db8b5c112e30198edff.2qmbRGko3oflbXkq";
-    const ZAI_ENDPOINT = "https://api.z.ai/paas/v4/chat/completions";
+    const ZAI_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
     try {
         const requestBody = {
