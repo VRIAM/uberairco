@@ -1,12 +1,7 @@
 // Vercel Serverless Function - z.ai API Proxy
 // This proxies requests to z.ai API to avoid CORS issues and hide API key
 
-export default async function handler(req, res) {
-    // Only allow POST requests
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
+module.exports = async function handler(req, res) {
     // CORS headers for browser requests
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -15,6 +10,11 @@ export default async function handler(req, res) {
     // Handle OPTIONS preflight request
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
+    }
+
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     // Get the messages from the request body
