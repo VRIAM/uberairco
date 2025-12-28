@@ -33,41 +33,61 @@ module.exports = async function handler(req, res) {
         const requestBody = {
             model: model || 'glm-4.7',
             messages: messages,
-            temperature: temperature || 0.7
+            temperature: temperature || 0.7,
+            stream: false  // Explicitly disable streaming
         };
 
         console.log('Calling z.ai API:', ZAI_ENDPOINT);
-        console.log('API Key (first 10 chars):', ZAI_KEY.substring(0, 10) + '...');
         console.log('Request body:', JSON.stringify(requestBody, null, 2));
 
-        // Call z.ai API with Bearer authentication
-        const response = await fetch(ZAI_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${ZAI_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        });
+        // Create an AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
 
-        console.log('z.ai response status:', response.status);
-        console.log('z.ai response headers:', JSON.stringify(Object.fromEntries(response.headers.entries())));
-
-        // Check if the response is ok
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('z.ai API Error:', response.status, errorText);
-            return res.status(500).json({
-                error: `z.ai API Error: ${response.status}`,
-                details: errorText,
-                endpoint: ZAI_ENDPOINT,
-                requestBody: requestBody
+        try {
+            // Call z.ai API with Bearer authentication and timeout
+            const response = await fetch(ZAI_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${ZAI_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody),
+                signal: controller.signal
             });
-        }
 
-        // Parse and return the response
-        const data = await response.json();
-        return res.status(200).json(data);
+            clearTimeout(timeoutId);
+
+            console.log('z.ai response status:', response.status);
+
+            // Check if the response is ok
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('z.ai API Error:', response.status, errorText);
+                return res.status(500).json({
+                    error: `z.ai API Error: ${response.status}`,
+                    details: errorText,
+                    endpoint: ZAI_ENDPOINT
+                });
+            }
+
+            // Parse and return the response
+            const data = await response.json();
+            console.log('z.ai response received successfully');
+            return res.status(200).json(data);
+
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+
+            if (fetchError.name === 'AbortError') {
+                console.error('Request timeout after 25 seconds');
+                return res.status(504).json({
+                    error: 'Request timeout',
+                    message: 'z.ai API took too long to respond (>25s). Please try again.'
+                });
+            }
+            throw fetchError;
+        }
 
     } catch (error) {
         console.error('Proxy Error:', error);
