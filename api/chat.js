@@ -25,9 +25,9 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid messages format' });
     }
 
-    // Zhipu AI (GLM) API configuration
+    // Z.AI API configuration
     const ZAI_KEY = "dd103b6b8df24db8b5c112e30198edff.2qmbRGko3oflbXkq";
-    const ZAI_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+    const ZAI_ENDPOINT = "https://api.z.ai/api/paas/v4/chat/completions";
 
     try {
         const requestBody = {
@@ -40,13 +40,12 @@ module.exports = async function handler(req, res) {
         console.log('API Key (first 10 chars):', ZAI_KEY.substring(0, 10) + '...');
         console.log('Request body:', JSON.stringify(requestBody, null, 2));
 
-        // Call z.ai API - try different auth methods
+        // Call z.ai API with Bearer authentication
         const response = await fetch(ZAI_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${ZAI_KEY}`,
-                'Content-Type': 'application/json',
-                'x-api-key': ZAI_KEY  // Try API key in header as well
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(requestBody)
         });
