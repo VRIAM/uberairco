@@ -1750,6 +1750,9 @@
                 isAiMode = true;
                 aiMessageCount = 0;
 
+                // Add initial selections to conversation summary for context in email
+                userData.aiSummary = `Aanvraag voor: ${userData.device} - ${userData.service}\n\n`;
+
                 setTimeout(() => {
                     enableTextInput();
 
