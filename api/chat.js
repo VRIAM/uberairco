@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
 
     try {
         const requestBody = {
-            model: model || 'glm-4.7-flash',  // Use flash model for faster responses
+            model: model || 'glm-4.5-air',  // Use Air model for faster responses
             messages: messages,
             temperature: temperature || 0.7,
             stream: false  // Explicitly disable streaming
