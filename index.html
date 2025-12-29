@@ -1662,7 +1662,7 @@
             addBotMessage('Hallo! Ik ben de technische assistent van UberAirco. 👋');
             setTimeout(() => {
                 addBotMessage('Waar gaat dit over?', [
-                    { text: '❄️ Airconditioning / Warmtepomp', value: 'airco' },
+                    { text: '❄️ Airconditioning', value: 'airco' },
                     { text: '💧 Waterpomp', value: 'waterpomp' }
                 ]);
             }, 500);
@@ -1798,8 +1798,8 @@
             chatHistory.push({ role: "user", content: userMessage });
             userData.aiSummary += `Klant: ${userMessage}\n`;
 
-            // Check if we've reached the 5-message limit (allows AI to ask 4-5 questions)
-            if (aiMessageCount >= 5) {
+            // Check if we've reached the 6-message limit (allows AI to ask all required questions)
+            if (aiMessageCount >= 6) {
                 disableTextInput();
                 setTimeout(() => {
                     addBotMessage('Dank u voor de informatie. Laten we nu uw gegevens invullen zodat wij contact met u kunnen opnemen.');
@@ -1808,36 +1808,26 @@
                 return;
             }
 
-            const systemPrompt = `Je bent een vriendelijke en behulpzame technische assistent van UberAirco in Rotterdam.
+            const systemPrompt = `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
 De klant heeft een ${userData.device} en zoekt ${userData.service}.
 
-BELANGRIJK - GESPREKSSTIJL:
-- Stel ALTIJD maar ÉÉN vraag per keer (niet meerdere vragen tegelijk!)
-- Toon empathie en begrip voor het probleem
-- Bevestig of vat het antwoord kort samen voordat je de volgende vraag stelt
-- Wees warm, professioneel en gerustststellend
+REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm en professioneel
+- Vat antwoorden kort samen
 
-BENODIGDE INFORMATIE (vraag deze stap voor stap):
-1. Eerst: Wat is het specifieke probleem of symptoom?
-2. Daarna: Welk merk en model is het? (indien bekend)
-3. Als laatste: Sinds wanneer speelt dit probleem?
-4. Ten slotte: Is dit urgent (spoedafspraak binnen 24 uur) of kan het ook een reguliere afspraak zijn (2-3 dagen)?
+VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
+1. Symptomen: "Wat is het probleem precies?"
+2. Merk: "Welk merk/model is het?"
+3. Timing: "Sinds wanneer?"
+4. Urgentie: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
 
-TIPS GEVEN (optioneel, alleen als relevant):
-- Je mag een simpele tip geven (bijv. "controleer of de filters schoon zijn")
-- MAAR vermeld ALTIJD: "Let op: doe geen technische reparaties zelf voordat de monteur komt"
+NA VRAAG 4:
+Geef ALTIJD deze afsluiting:
+"[Samenvatting]. Voor een [merk] komt dit vaker voor en heeft dit vaak een monteur nodig. [Optionele tip + 'Let op: doe zelf geen reparaties']. Ik heb voldoende informatie."
 
-AFSLUITING (na alle vragen):
-Wanneer je voldoende informatie hebt:
-1. Vat kort samen wat je hebt begrepen (inclusief urgentie)
-2. Geef eventueel een simpele tip + disclaimer
-3. Vermeld ALTIJD: "Voor een [merk], zoals u heeft, komt dit vaker voor en heeft dit vaak een monteur nodig."
-4. Sluit af met: "Ik heb voldoende informatie."
-
-VOORBEELD AFSLUITING:
-"Helder! Dus uw Siemens airco koelt sinds gisteren niet meer en u heeft liever een spoedafspraak. U kunt in de tussentijd controleren of de filters schoon zijn - maar let op: doe geen technische reparaties zelf voordat de monteur komt. Voor een Siemens, zoals u heeft, komt dit vaker voor en heeft dit vaak een monteur nodig. Laten we snel een afspraak inplannen. Ik heb voldoende informatie."
-
-Gebruik Nederlandse taal en wees persoonlijk en vriendelijk.`;
+VOORBEELD:
+"Helder! Uw Samsung airco maakt lawaai en koelt niet sinds 3 dagen, en u wilt graag spoedafspraak. Voor een Samsung komt dit vaker voor en heeft dit vaak een monteur nodig. U kunt de filters checken maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."`;
 
             const payload = {
                 model: "glm-4.5-air",  // Use Air model for faster responses
@@ -1988,12 +1978,13 @@ Gebruik Nederlandse taal en wees persoonlijk en vriendelijk.`;
                 const customerEmailData = {
                     to_email: userData.email,
                     name: userData.name,
+                    email: userData.email,
                     device: userData.device,
                     service: userData.service,
                     phone: userData.phone,
                     address: userData.address || "Niet opgegeven",
                     postcode: userData.postcode,
-                    diagnosis: "Bedankt voor uw aanvraag. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen."
+                    diagnosis: `Bedankt voor uw aanvraag voor ${userData.service} van uw ${userData.device}. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen.`
                 };
 
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, customerEmailData);
