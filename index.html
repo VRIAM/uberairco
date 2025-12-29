@@ -1750,8 +1750,9 @@
                 isAiMode = true;
                 aiMessageCount = 0;
                 setTimeout(() => {
-                    addBotMessage('Beschrijf het probleem of uw situatie met de ' + userData.device + '. Ik stel u een paar vragen om beter te begrijpen wat er aan de hand is.');
+                    // Let AI start the conversation naturally
                     enableTextInput();
+                    startAIConversation();
                 }, 500);
             }
         }
@@ -1793,6 +1794,75 @@
         // =====================================================
         // Z.AI API INTEGRATION
         // =====================================================
+        async function startAIConversation() {
+            // Initial AI message - no user input yet
+            const systemPrompt = `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant heeft een ${userData.device} en zoekt ${userData.service}.
+
+REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm en professioneel
+- Vat antwoorden kort samen
+
+VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
+1. Symptomen: "Wat is het probleem precies?"
+2. Merk: "Welk merk/model is het?"
+3. Timing: "Sinds wanneer?"
+4. Urgentie: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
+
+NA VRAAG 4:
+Geef ALTIJD deze afsluiting:
+"[Samenvatting]. Voor een [merk] komt dit vaker voor en heeft dit vaak een monteur nodig. [Optionele tip + 'Let op: doe zelf geen reparaties']. Ik heb voldoende informatie."
+
+VOORBEELD:
+"Helder! Uw Samsung airco maakt lawaai en koelt niet sinds 3 dagen, en u wilt graag spoedafspraak. Voor een Samsung komt dit vaker voor en heeft dit vaak een monteur nodig. U kunt de filters checken maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."
+
+Begin nu door de eerste vraag te stellen over de symptomen.`;
+
+            const payload = {
+                model: "glm-4.5-air",
+                messages: [
+                    { role: "system", content: systemPrompt }
+                ],
+                temperature: 0.7
+            };
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(AI_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                hideTypingIndicator();
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+
+                userData.aiSummary += `Assistent: ${aiResponse}\n`;
+                chatHistory.push({ role: "assistant", content: aiResponse });
+                addBotMessage(aiResponse);
+
+            } catch (error) {
+                hideTypingIndicator();
+                console.error("Z.ai API Error:", error);
+                addBotMessage('Er ging iets mis met de verbinding. Laten we doorgaan met het formulier.');
+                setTimeout(() => {
+                    showBookingForm();
+                }, 1000);
+            }
+        }
+
         async function callZAI(userMessage) {
             // Save user message to conversation history
             chatHistory.push({ role: "user", content: userMessage });
@@ -1984,7 +2054,7 @@ VOORBEELD:
                     phone: userData.phone,
                     address: userData.address || "Niet opgegeven",
                     postcode: userData.postcode,
-                    diagnosis: `Bedankt voor uw aanvraag voor ${userData.service} van uw ${userData.device}. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen.`
+                    diagnosis: userData.aiSummary + `\n\nBedankt voor uw aanvraag voor ${userData.service} van uw ${userData.device}. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen.`
                 };
 
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, customerEmailData);
