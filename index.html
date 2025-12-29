@@ -1662,7 +1662,7 @@
             addBotMessage('Hallo! Ik ben de technische assistent van UberAirco. 👋');
             setTimeout(() => {
                 addBotMessage('Waar gaat dit over?', [
-                    { text: '❄️ Airco / Warmtepomp', value: 'airco' },
+                    { text: '❄️ Airconditioning / Warmtepomp', value: 'airco' },
                     { text: '💧 Waterpomp', value: 'waterpomp' }
                 ]);
             }, 500);
@@ -1798,8 +1798,8 @@
             chatHistory.push({ role: "user", content: userMessage });
             userData.aiSummary += `Klant: ${userMessage}\n`;
 
-            // Check if we've reached the 3-message limit
-            if (aiMessageCount >= 3) {
+            // Check if we've reached the 5-message limit (allows AI to ask 4-5 questions)
+            if (aiMessageCount >= 5) {
                 disableTextInput();
                 setTimeout(() => {
                     addBotMessage('Dank u voor de informatie. Laten we nu uw gegevens invullen zodat wij contact met u kunnen opnemen.');
@@ -1904,16 +1904,27 @@ Gebruik Nederlandse taal en wees persoonlijk en vriendelijk.`;
             const formHtml = `
                 <div class="message bot">
                     <div class="message-content">
-                        <strong>Vul uw gegevens in:</strong>
+                        <strong>Vul uw gegevens in:</strong><br>
+                        <small style="color: #666;">Velden met * zijn verplicht</small>
                     </div>
                 </div>
                 <div class="chat-form" id="bookingForm">
-                    <input type="text" id="form-name" placeholder="Uw naam *" required>
-                    <input type="email" id="form-email" placeholder="Uw e-mailadres *" required>
-                    <input type="tel" id="form-phone" placeholder="Telefoonnummer *" required>
-                    <input type="text" id="form-postcode" placeholder="Postcode *" required>
-                    <input type="text" id="form-address" placeholder="Adres (optioneel)">
-                    <button onclick="submitBooking()">Verstuur Aanvraag</button>
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block;">Naam *</label>
+                    <input type="text" id="form-name" placeholder="Bijv. Jan de Vries" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">E-mailadres *</label>
+                    <input type="email" id="form-email" placeholder="Bijv. jan@voorbeeld.nl" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Telefoonnummer *</label>
+                    <input type="tel" id="form-phone" placeholder="Bijv. 06 12345678" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Postcode *</label>
+                    <input type="text" id="form-postcode" placeholder="Bijv. 3011AB" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Adres (optioneel)</label>
+                    <input type="text" id="form-address" placeholder="Bijv. Straatnaam 123">
+
+                    <button onclick="submitBooking()" style="margin-top: 12px;">Verstuur Aanvraag</button>
                 </div>
             `;
 
