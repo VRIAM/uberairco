@@ -1743,16 +1743,24 @@
                     ]);
                 }, 500);
             }
-            // Service Selection -> Switch to AI
+            // Service Selection -> Switch to AI with service-specific first question
             else if (chatState === 'service') {
                 userData.service = value.charAt(0).toUpperCase() + value.slice(1);
                 chatState = 'ai_diagnosis';
                 isAiMode = true;
                 aiMessageCount = 0;
+
                 setTimeout(() => {
-                    // Let AI start the conversation naturally
                     enableTextInput();
-                    startAIConversation();
+
+                    // Different first question based on service type
+                    if (value === 'installatie') {
+                        addBotMessage('Voor welke ruimte is de installatie bedoeld? (bijv. woonkamer, slaapkamer, kantoor)');
+                    } else if (value === 'onderhoud') {
+                        addBotMessage('Welk merk en model heeft u?');
+                    } else { // reparatie
+                        addBotMessage('Wat is het probleem precies met uw ' + userData.device.toLowerCase() + '?');
+                    }
                 }, 500);
             }
         }
@@ -1794,10 +1802,12 @@
         // =====================================================
         // Z.AI API INTEGRATION
         // =====================================================
-        async function startAIConversation() {
-            // Initial AI message - no user input yet
-            const systemPrompt = `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
-De klant heeft een ${userData.device} en zoekt ${userData.service}.
+        function getSystemPrompt() {
+            const service = userData.service.toLowerCase();
+
+            if (service === 'installatie') {
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant wil een ${userData.device} laten installeren.
 
 REGELS:
 - Stel ÉÉN vraag per keer
@@ -1805,9 +1815,53 @@ REGELS:
 - Vat antwoorden kort samen
 
 VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
-1. Symptomen: "Wat is het probleem precies?"
+1. Ruimte: "Voor welke ruimte is de installatie?" (al gesteld - eerste antwoord)
+2. Oppervlakte: "Hoe groot is de ruimte ongeveer in m²?" (of klein/middel/groot)
+3. Voorkeur merk: "Heeft u een voorkeur voor een bepaald merk?"
+4. Timing: "Wanneer wilt u dit laten installeren?"
+
+NA VRAAG 4:
+Geef ALTIJD deze afsluiting:
+"[Samenvatting]. Wij kunnen u adviseren over de beste opties voor uw situatie. Ik heb voldoende informatie."
+
+VOORBEELD:
+"Helder! U wilt een airco in de woonkamer (ca. 30m²), voorkeur voor Daikin, en u wilt dit binnen 2 weken laten installeren. Wij kunnen u adviseren over de beste opties voor uw situatie. Ik heb voldoende informatie."`;
+
+            } else if (service === 'onderhoud') {
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant wil onderhoud aan een ${userData.device}.
+
+REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm en professioneel
+- Vat antwoorden kort samen
+
+VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
+1. Merk/model: "Welk merk en model is het?" (al gesteld - eerste antwoord)
+2. Laatste onderhoud: "Wanneer was het laatste onderhoud?" (of zeg "Is dit de eerste keer?")
+3. Problemen: "Werkt alles normaal of zijn er problemen?"
+4. Timing: "Wanneer wilt u het onderhoud laten uitvoeren?"
+
+NA VRAAG 4:
+Geef ALTIJD deze afsluiting:
+"[Samenvatting]. Regelmatig onderhoud voorkomt storingen en verlengt de levensduur. Ik heb voldoende informatie."
+
+VOORBEELD:
+"Helder! U heeft een Mitsubishi airco, laatste onderhoud was 2 jaar geleden, werkt normaal, en u wilt het binnen een maand laten doen. Regelmatig onderhoud voorkomt storingen en verlengt de levensduur. Ik heb voldoende informatie."`;
+
+            } else { // reparatie
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant heeft een ${userData.device} die gerepareerd moet worden.
+
+REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm en professioneel
+- Vat antwoorden kort samen
+
+VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
+1. Symptomen: "Wat is het probleem precies?" (al gesteld - eerste antwoord)
 2. Merk: "Welk merk/model is het?"
-3. Timing: "Sinds wanneer?"
+3. Timing: "Sinds wanneer doet dit probleem zich voor?"
 4. Urgentie: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
 
 NA VRAAG 4:
@@ -1815,51 +1869,7 @@ Geef ALTIJD deze afsluiting:
 "[Samenvatting]. Voor een [merk] komt dit vaker voor en heeft dit vaak een monteur nodig. [Optionele tip + 'Let op: doe zelf geen reparaties']. Ik heb voldoende informatie."
 
 VOORBEELD:
-"Helder! Uw Samsung airco maakt lawaai en koelt niet sinds 3 dagen, en u wilt graag spoedafspraak. Voor een Samsung komt dit vaker voor en heeft dit vaak een monteur nodig. U kunt de filters checken maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."
-
-Begin nu door de eerste vraag te stellen over de symptomen.`;
-
-            const payload = {
-                model: "glm-4.5-air",
-                messages: [
-                    { role: "system", content: systemPrompt }
-                ],
-                temperature: 0.7
-            };
-
-            showTypingIndicator();
-
-            try {
-                const response = await fetch(AI_ENDPOINT, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                hideTypingIndicator();
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('API Error:', errorData);
-                    throw new Error(`API Error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.choices[0].message.content;
-
-                userData.aiSummary += `Assistent: ${aiResponse}\n`;
-                chatHistory.push({ role: "assistant", content: aiResponse });
-                addBotMessage(aiResponse);
-
-            } catch (error) {
-                hideTypingIndicator();
-                console.error("Z.ai API Error:", error);
-                addBotMessage('Er ging iets mis met de verbinding. Laten we doorgaan met het formulier.');
-                setTimeout(() => {
-                    showBookingForm();
-                }, 1000);
+"Helder! Uw Samsung airco maakt lawaai en koelt niet sinds 3 dagen, en u wilt graag spoedafspraak. Voor een Samsung komt dit vaker voor en heeft dit vaak een monteur nodig. U kunt de filters checken maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."`;
             }
         }
 
@@ -1878,26 +1888,8 @@ Begin nu door de eerste vraag te stellen over de symptomen.`;
                 return;
             }
 
-            const systemPrompt = `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
-De klant heeft een ${userData.device} en zoekt ${userData.service}.
-
-REGELS:
-- Stel ÉÉN vraag per keer
-- Wees warm en professioneel
-- Vat antwoorden kort samen
-
-VERPLICHTE VRAGEN (stel ze allemaal, één voor één):
-1. Symptomen: "Wat is het probleem precies?"
-2. Merk: "Welk merk/model is het?"
-3. Timing: "Sinds wanneer?"
-4. Urgentie: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
-
-NA VRAAG 4:
-Geef ALTIJD deze afsluiting:
-"[Samenvatting]. Voor een [merk] komt dit vaker voor en heeft dit vaak een monteur nodig. [Optionele tip + 'Let op: doe zelf geen reparaties']. Ik heb voldoende informatie."
-
-VOORBEELD:
-"Helder! Uw Samsung airco maakt lawaai en koelt niet sinds 3 dagen, en u wilt graag spoedafspraak. Voor een Samsung komt dit vaker voor en heeft dit vaak een monteur nodig. U kunt de filters checken maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."`;
+            // Get service-specific system prompt
+            const systemPrompt = getSystemPrompt();
 
             const payload = {
                 model: "glm-4.5-air",  // Use Air model for faster responses
