@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UberAirco | Airconditioning & Pompen Specialist Rotterdam</title>
     <meta name="description" content="STEK-gecertificeerd airconditioning en waterpomp specialist in Rotterdam. Installatie, reparatie en onderhoud. Binnen 24 uur reactie. Bel of start een chat.">
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <style>
         :root {
             --primary: #1a5276;
@@ -972,6 +976,47 @@
             font-weight: 700;
             font-size: 1rem;
         }
+        .chat-form {
+            padding: 16px;
+            background: var(--white);
+        }
+        .chat-form input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .chat-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .chat-form button {
+            width: 100%;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .chat-form button:hover {
+            background: var(--accent-hover);
+        }
+        .typing-indicator {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 8px 16px;
+            display: none;
+        }
+        .typing-indicator.active {
+            display: block;
+        }
 
         /* Desktop */
         @media (min-width: 768px) {
@@ -1024,8 +1069,8 @@
                 left: auto;
                 right: 24px;
                 bottom: 100px;
-                width: 400px;
-                height: 550px;
+                width: 500px;
+                height: 680px;
                 border-radius: 16px;
                 box-shadow: 0 10px 40px rgba(0,0,0,0.25);
                 overflow: hidden;
@@ -1505,17 +1550,21 @@
             </div>
             <div class="chat-scroll" id="chatScroll">
                 <div id="chatMessages"></div>
+                <div class="typing-indicator" id="typingIndicator">UberAssistent typt...</div>
             </div>
             <div class="chat-input-wrap" id="chatInputWrap">
                 <div class="chat-input-row">
-                    <input type="text" class="chat-input-field" id="chatInputField" placeholder="Typ uw postcode..." autocomplete="off">
-                    <button class="chat-send-btn" onclick="sendPostcode()">Verstuur</button>
+                    <input type="text" class="chat-input-field" id="chatInputField" placeholder="Typ hier..." autocomplete="off">
+                    <button class="chat-send-btn" id="chatSendBtn" onclick="handleChatInput()">Verstuur</button>
                 </div>
             </div>
         </div>
     </dialog>
 
     <script>
+        // =====================================================
+        // WEBSITE FUNCTIONS (Navigation, FAQ)
+        // =====================================================
         function toggleNav() {
             document.querySelector('.nav-overlay').classList.toggle('active');
             document.querySelector('.mobile-nav').classList.toggle('active');
@@ -1528,11 +1577,45 @@
             if (!wasActive) item.classList.add('active');
         }
 
+        // =====================================================
+        // CHATBOT CONFIGURATION
+        // =====================================================
+        // Using serverless function proxy to avoid CORS and hide API key
+        const AI_ENDPOINT = "/api/chat";
+
+        const EMAILJS_PUBLIC_KEY = "rsLxZ0fE16KrpTytS";
+        const EMAILJS_SERVICE_ID = "service_h5zs3dz";
+        const EMAILJS_TEMPLATE_ID = "template_krf94br";
+        const ADMIN_EMAIL = "d.v.marinov@gmail.com";
+
+        // Initialize EmailJS
+        (function() {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        })();
+
+        // =====================================================
+        // CHATBOT STATE VARIABLES
+        // =====================================================
         let chatState = 'initial';
-        let userData = {};
+        let isAiMode = false;
+        let chatHistory = [];
+        let aiMessageCount = 0;
+        let userData = {
+            device: "",
+            service: "",
+            aiSummary: "",
+            name: "",
+            email: "",
+            phone: "",
+            address: "",
+            postcode: ""
+        };
         let scrollPos = 0;
         const chatDialog = document.getElementById('chatDialog');
 
+        // =====================================================
+        // CHAT WINDOW MANAGEMENT
+        // =====================================================
         function openChat() {
             scrollPos = window.pageYOffset;
             chatDialog.showModal();
@@ -1555,18 +1638,39 @@
             closeChat();
         });
 
+        // =====================================================
+        // CHAT INITIALIZATION
+        // =====================================================
         function initChat() {
             document.getElementById('chatMessages').innerHTML = '';
-            addBotMessage('Welkom bij UberAirco! 👋 Ik help u snel op weg.');
+            chatState = 'device';
+            isAiMode = false;
+            aiMessageCount = 0;
+            chatHistory = [];
+            userData = {
+                device: "",
+                service: "",
+                aiSummary: "",
+                name: "",
+                email: "",
+                phone: "",
+                address: "",
+                postcode: ""
+            };
+            document.getElementById('chatInputWrap').classList.remove('active');
+
+            addBotMessage('Hallo! Ik ben de technische assistent van UberAirco. 👋');
             setTimeout(() => {
-                addBotMessage('Wat kunnen wij voor u doen?', [
-                    { text: '🆕 Nieuwe installatie', value: 'install' },
-                    { text: '🔧 Reparatie of storing', value: 'repair' },
-                    { text: '📋 Onderhoud', value: 'maintenance' }
+                addBotMessage('Waar gaat dit over?', [
+                    { text: '❄️ Airconditioning', value: 'airco' },
+                    { text: '💧 Waterpomp', value: 'waterpomp' }
                 ]);
             }, 500);
         }
 
+        // =====================================================
+        // MESSAGE DISPLAY FUNCTIONS
+        // =====================================================
         function addBotMessage(text, options) {
             const container = document.getElementById('chatMessages');
             const msg = document.createElement('div');
@@ -1575,97 +1679,416 @@
             if (options) {
                 html += '<div class="chat-options">';
                 options.forEach(o => {
-                    html += '<button class="chat-option" onclick="selectOption(\'' + o.value + '\',\'' + o.text.replace(/'/g, "\\'") + '\')">' + o.text + '</button>';
+                    html += '<button class="chat-option" onclick="selectOption(\'' + o.value + '\',\'' + escapeHtml(o.text) + '\')">' + o.text + '</button>';
                 });
                 html += '</div>';
             }
             msg.innerHTML = html;
             container.appendChild(msg);
-            document.getElementById('chatScroll').scrollTop = document.getElementById('chatScroll').scrollHeight;
+            scrollToBottom();
         }
 
         function addUserMessage(text) {
             const container = document.getElementById('chatMessages');
             const msg = document.createElement('div');
             msg.className = 'message user';
-            msg.innerHTML = '<div class="message-content">' + text + '</div>';
+            msg.innerHTML = '<div class="message-content">' + escapeHtml(text) + '</div>';
             container.appendChild(msg);
-            document.getElementById('chatScroll').scrollTop = document.getElementById('chatScroll').scrollHeight;
+            scrollToBottom();
         }
 
+        function scrollToBottom() {
+            const chatScroll = document.getElementById('chatScroll');
+            chatScroll.scrollTop = chatScroll.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').classList.add('active');
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // =====================================================
+        // OPTION SELECTION (Hardcoded Flow)
+        // =====================================================
         function selectOption(value, text) {
             document.querySelectorAll('.chat-options').forEach(el => el.remove());
             addUserMessage(text);
 
-            if (value === 'confirm') {
+            if (value === 'restart') {
                 setTimeout(() => {
-                    addBotMessage('✅ <strong>Aanvraag ontvangen!</strong><br><br>Bedankt voor uw vertrouwen in UberAirco. Wij nemen binnen 24 uur telefonisch contact met u op.<br><br>U kunt dit venster nu sluiten.');
-                    chatState = 'complete';
-                }, 500);
-                return;
-            }
-            if (value === 'restart' || value === 'retry_location') {
-                chatState = 'initial';
-                userData = {};
-                document.getElementById('chatInputWrap').classList.remove('active');
-                initChat();
+                    initChat();
+                }, 300);
                 return;
             }
 
-            if (chatState === 'initial') {
-                userData.type = value;
-                chatState = 'category';
+            // Device Selection
+            if (chatState === 'device') {
+                userData.device = value === 'airco' ? 'Airco' : 'Waterpomp';
+                chatState = 'service';
                 setTimeout(() => {
-                    addBotMessage('Om welk type installatie gaat het?', [
-                        { text: '❄️ Airconditioning / Warmtepomp', value: 'airco' },
-                        { text: '💧 Waterpomp', value: 'pump' }
+                    addBotMessage('En welke service heeft u nodig?', [
+                        { text: '🔧 Reparatie', value: 'reparatie' },
+                        { text: '📋 Onderhoud', value: 'onderhoud' },
+                        { text: '🆕 Installatie', value: 'installatie' }
                     ]);
                 }, 500);
-            } else if (chatState === 'category') {
-                userData.category = value;
-                chatState = 'location';
+            }
+            // Service Selection -> Switch to AI with service-specific first question
+            else if (chatState === 'service') {
+                userData.service = value.charAt(0).toUpperCase() + value.slice(1);
+                chatState = 'ai_diagnosis';
+                isAiMode = true;
+                aiMessageCount = 0;
+
+                // Add initial selections to conversation summary for context in email
+                userData.aiSummary = `Aanvraag voor: ${userData.device} - ${userData.service}\n\n`;
+
                 setTimeout(() => {
-                    addBotMessage('Top! Wat is uw postcode? Dan controleer ik of u binnen ons werkgebied valt.');
-                    document.getElementById('chatInputWrap').classList.add('active');
-                    document.getElementById('chatInputField').focus();
+                    enableTextInput();
+
+                    // Different first question based on service type
+                    let firstQuestion = '';
+                    if (value === 'installatie') {
+                        firstQuestion = 'Voor welke ruimte is de installatie bedoeld? (bijv. woonkamer, slaapkamer, kantoor)';
+                    } else if (value === 'onderhoud') {
+                        firstQuestion = 'Welk merk en model heeft u?';
+                    } else { // reparatie
+                        firstQuestion = 'Wat is het probleem precies met uw ' + userData.device.toLowerCase() + '?';
+                    }
+
+                    // Add first question to summary
+                    userData.aiSummary += `Assistent: ${firstQuestion}\n`;
+                    addBotMessage(firstQuestion);
                 }, 500);
             }
         }
 
-        function sendPostcode() {
-            const input = document.getElementById('chatInputField');
-            const postcode = input.value.trim().toUpperCase();
-            if (!postcode) return;
+        // =====================================================
+        // TEXT INPUT HANDLING
+        // =====================================================
+        function enableTextInput() {
+            document.getElementById('chatInputWrap').classList.add('active');
+            document.getElementById('chatInputField').focus();
+        }
 
-            addUserMessage(postcode);
-            input.value = '';
-            userData.postcode = postcode;
+        function disableTextInput() {
             document.getElementById('chatInputWrap').classList.remove('active');
+        }
 
-            const valid = ['30','31','32','28','29','26','27','33','29'].includes(postcode.substring(0,2));
-            
-            setTimeout(() => {
-                if (valid) {
-                    const svcMap = {install: 'Nieuwe installatie', repair: 'Reparatie/storing', maintenance: 'Onderhoud'};
-                    const devMap = {airco: 'Airco/warmtepomp', pump: 'Waterpomp'};
-                    addBotMessage('Uitstekend, u valt binnen ons werkgebied! 📍');
-                    setTimeout(() => {
-                        addBotMessage('<strong>Samenvatting:</strong><br>• ' + svcMap[userData.type] + '<br>• ' + devMap[userData.category] + '<br>• Postcode: ' + postcode + '<br><br>Klopt dit?', [
-                            { text: '✅ Ja, neem contact op', value: 'confirm' },
-                            { text: '🔄 Opnieuw beginnen', value: 'restart' }
-                        ]);
-                    }, 500);
-                } else {
-                    addBotMessage('Helaas, postcode ' + postcode + ' valt buiten ons werkgebied (regio Rotterdam).', [
-                        { text: '🔄 Andere postcode invoeren', value: 'retry_location' }
-                    ]);
-                }
-            }, 600);
+        function handleChatInput() {
+            const inputField = document.getElementById('chatInputField');
+            const text = inputField.value.trim();
+
+            if (text === "") return;
+
+            addUserMessage(text);
+            inputField.value = "";
+
+            if (isAiMode) {
+                aiMessageCount++;
+                callZAI(text);
+            }
         }
 
         document.getElementById('chatInputField').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') { e.preventDefault(); sendPostcode(); }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleChatInput();
+            }
         });
+
+        // =====================================================
+        // Z.AI API INTEGRATION
+        // =====================================================
+        function getSystemPrompt() {
+            const service = userData.service.toLowerCase();
+
+            if (service === 'installatie') {
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant wil een ${userData.device} laten installeren.
+
+STRENGE REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm, professioneel en NATUURLIJK variërend
+- Gebruik verschillende bevestigingen: "Bedankt!", "Duidelijk!", "Prima!", of direct de vraag
+- NOOIT "Helder!" meer dan één keer gebruiken
+- Accepteer korte antwoorden
+
+VERPLICHTE VRAGEN (volg deze volgorde):
+1. Ruimte: "Voor welke ruimte is de installatie?" (al gesteld - eerste antwoord)
+2. Oppervlakte: "Hoe groot is de ruimte ongeveer in m²?" (of klein/middel/groot)
+3. Voorkeur merk: "Heeft u een voorkeur voor een bepaald merk?"
+4. Timing: "Wanneer wilt u dit laten installeren?"
+
+NA VRAAG 4:
+"[Samenvatting]. Wij kunnen u adviseren over de beste opties voor uw situatie. Ik heb voldoende informatie."
+
+VOORBEELD:
+"Prima! U wilt een airco in de woonkamer (ca. 30m²), voorkeur voor Daikin, en u wilt dit binnen 2 weken laten installeren. Wij kunnen u adviseren over de beste opties voor uw situatie. Ik heb voldoende informatie."`;
+
+            } else if (service === 'onderhoud') {
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant wil onderhoud aan een ${userData.device}.
+
+STRENGE REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm, professioneel en NATUURLIJK variërend
+- Gebruik verschillende bevestigingen: "Bedankt!", "Duidelijk!", "Oké!", of direct de vraag
+- NOOIT "Helder!" meer dan één keer gebruiken
+- Accepteer korte antwoorden
+
+VERPLICHTE VRAGEN (volg deze volgorde):
+1. Merk/model: "Welk merk en model is het?" (al gesteld - eerste antwoord)
+2. Laatste onderhoud: "Wanneer was het laatste onderhoud?" (of zeg "Is dit de eerste keer?")
+3. Problemen: "Werkt alles normaal of zijn er problemen?"
+4. Timing: "Wanneer wilt u het onderhoud laten uitvoeren?"
+
+NA VRAAG 4:
+"[Samenvatting]. Regelmatig onderhoud voorkomt storingen en verlengt de levensduur. Ik heb voldoende informatie."
+
+VOORBEELD:
+"Oké! U heeft een Mitsubishi airco, laatste onderhoud was 2 jaar geleden, werkt normaal, en u wilt het binnen een maand laten doen. Regelmatig onderhoud voorkomt storingen en verlengt de levensduur. Ik heb voldoende informatie."`;
+
+            } else { // reparatie
+                return `Je bent een vriendelijke technische assistent van UberAirco in Rotterdam.
+De klant heeft een ${userData.device} die gerepareerd moet worden.
+
+STRENGE REGELS:
+- Stel ÉÉN vraag per keer
+- Wees warm, professioneel en NATUURLIJK variërend
+- Gebruik verschillende bevestigingen: "Bedankt!", "Duidelijk!", "Oké!", of direct de vraag
+- NOOIT "Helder!" meer dan één keer gebruiken
+- Als symptomen vaag zijn ("werkt niet", "doet raar"), vraag specificatie
+- Voor merk/timing/urgentie: accepteer korte antwoorden
+
+VERPLICHTE VRAGEN (volg deze volgorde):
+1. Symptomen: "Wat is het probleem precies?" (al gesteld)
+   - Als vaag antwoord: vraag "Wat merkt u precies? Koelt niet? Lawaai? Lekkage? Storingscode?"
+2. Merk: "Welk merk/model is het?"
+3. Timing: "Sinds wanneer doet dit probleem zich voor?"
+4. Urgentie: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
+
+NA VRAAG 4:
+Geef diagnostische afsluiting met:
+"[Samenvatting]. Dit kan wijzen op [mogelijke oorzaak zoals: koelmiddellek/compressorprobleem/thermostaat/verstopte filter]. Voor een [merk] komt [symptoom] vaker voor en heeft dit meestal een monteur nodig. [Veilige tip zoals filters checken] maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."
+
+VOORBEELD 1 (goed):
+Klant: "koelt niet meer"
+Assistent: "Welk merk/model is het?"
+Klant: "Samsung"
+Assistent: "Bedankt! Sinds wanneer koelt hij niet meer?"
+Klant: "3 dagen"
+Assistent: "Is dit urgent (binnen 24u) of regulier (2-3 dagen)?"
+Klant: "urgent"
+Assistent: "Oké! Uw Samsung airco koelt niet meer sinds 3 dagen en u wilt spoedafspraak. Dit kan wijzen op een koelmiddellek of compressorprobleem. Voor een Samsung komt dit vaker voor en heeft dit meestal een monteur nodig. U kunt de filters checken en thermostaat controleren, maar let op: doe zelf geen technische reparaties. Ik heb voldoende informatie."
+
+VOORBEELD 2 (vage symptomen):
+Klant: "werkt niet goed"
+Assistent: "Wat merkt u precies? Koelt de airco niet genoeg, maakt hij lawaai, of is er een ander probleem?"
+Klant: "hij lekt water"
+Assistent: "Duidelijk! Welk merk/model is het?"`;
+            }
+        }
+
+        async function callZAI(userMessage) {
+            // Save user message to conversation history
+            chatHistory.push({ role: "user", content: userMessage });
+            userData.aiSummary += `Klant: ${userMessage}\n`;
+
+            // Check if we've reached the message limit (allows AI to ask all required questions with some buffer)
+            if (aiMessageCount >= 8) {
+                disableTextInput();
+                setTimeout(() => {
+                    addBotMessage('Dank u voor de informatie. Laten we nu uw gegevens invullen zodat wij contact met u kunnen opnemen.');
+                    showBookingForm();
+                }, 500);
+                return;
+            }
+
+            // Get service-specific system prompt
+            const systemPrompt = getSystemPrompt();
+
+            const payload = {
+                model: "glm-4.5-air",  // Use Air model for faster responses
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    ...chatHistory
+                ],
+                temperature: 0.7
+            };
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(AI_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                hideTypingIndicator();
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+
+                userData.aiSummary += `Assistent: ${aiResponse}\n`;
+                chatHistory.push({ role: "assistant", content: aiResponse });
+                addBotMessage(aiResponse);
+
+                // Check if AI indicates it has enough info
+                if (aiResponse.toLowerCase().includes("voldoende informatie") ||
+                    aiResponse.toLowerCase().includes("genoeg informatie")) {
+                    isAiMode = false;
+                    disableTextInput();
+                    setTimeout(() => {
+                        addBotMessage('Laten we nu uw contactgegevens invullen.');
+                        showBookingForm();
+                    }, 1000);
+                }
+
+            } catch (error) {
+                hideTypingIndicator();
+                console.error("Z.ai API Error:", error);
+                addBotMessage('Er ging iets mis met de verbinding. Laten we doorgaan met het formulier.');
+                setTimeout(() => {
+                    showBookingForm();
+                }, 1000);
+            }
+        }
+
+        // =====================================================
+        // BOOKING FORM
+        // =====================================================
+        function showBookingForm() {
+            disableTextInput();
+
+            const formHtml = `
+                <div class="message bot">
+                    <div class="message-content">
+                        <strong>Vul uw gegevens in:</strong><br>
+                        <small style="color: #666;">Velden met * zijn verplicht</small>
+                    </div>
+                </div>
+                <div class="chat-form" id="bookingForm">
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block;">Naam *</label>
+                    <input type="text" id="form-name" placeholder="Bijv. Jan de Vries" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">E-mailadres *</label>
+                    <input type="email" id="form-email" placeholder="Bijv. jan@voorbeeld.nl" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Telefoonnummer *</label>
+                    <input type="tel" id="form-phone" placeholder="Bijv. 06 12345678" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Postcode *</label>
+                    <input type="text" id="form-postcode" placeholder="Bijv. 3011AB" required>
+
+                    <label style="font-size: 0.85rem; color: #666; margin-bottom: 4px; display: block; margin-top: 8px;">Adres (optioneel)</label>
+                    <input type="text" id="form-address" placeholder="Bijv. Straatnaam 123">
+
+                    <button onclick="submitBooking()" style="margin-top: 12px;">Verstuur Aanvraag</button>
+                </div>
+            `;
+
+            document.getElementById('chatMessages').insertAdjacentHTML('beforeend', formHtml);
+            scrollToBottom();
+        }
+
+        async function submitBooking() {
+            const name = document.getElementById('form-name').value.trim();
+            const email = document.getElementById('form-email').value.trim();
+            const phone = document.getElementById('form-phone').value.trim();
+            const postcode = document.getElementById('form-postcode').value.trim().toUpperCase();
+            const address = document.getElementById('form-address').value.trim();
+
+            // Validation
+            if (!name || !email || !phone || !postcode) {
+                addBotMessage('⚠️ Vul alstublieft alle verplichte velden in (naam, email, telefoon, postcode).');
+                return;
+            }
+
+            // Email validation
+            if (!email.includes('@') || !email.includes('.')) {
+                addBotMessage('⚠️ Vul alstublieft een geldig e-mailadres in.');
+                return;
+            }
+
+            // Postcode validation (Rotterdam area: 28xx, 29xx, 30xx, 31xx, 32xx, 33xx, 26xx, 27xx)
+            const validPostcodes = ['30','31','32','28','29','26','27','33'];
+            if (!validPostcodes.includes(postcode.substring(0,2))) {
+                addBotMessage('⚠️ Helaas, postcode ' + postcode + ' valt buiten ons werkgebied (regio Rotterdam). Onze service is beschikbaar voor postcodes: 26xx, 27xx, 28xx, 29xx, 30xx, 31xx, 32xx, 33xx.');
+                return;
+            }
+
+            userData.name = name;
+            userData.email = email;
+            userData.phone = phone;
+            userData.postcode = postcode;
+            userData.address = address;
+
+            // Prepare email data
+            const emailData = {
+                to_email: ADMIN_EMAIL,
+                device: userData.device,
+                service: userData.service,
+                diagnosis: userData.aiSummary || "Geen AI diagnose beschikbaar",
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                address: userData.address || "Niet opgegeven",
+                postcode: userData.postcode
+            };
+
+            // Disable form
+            document.getElementById('bookingForm').innerHTML = '<p style="text-align:center; padding:20px;">Bezig met verzenden...</p>';
+
+            try {
+                // Send email to admin with full details
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailData);
+
+                // Send confirmation email to customer
+                const customerEmailData = {
+                    to_email: userData.email,
+                    name: userData.name,
+                    email: userData.email,
+                    device: userData.device,
+                    service: userData.service,
+                    phone: userData.phone,
+                    address: userData.address || "Niet opgegeven",
+                    postcode: userData.postcode,
+                    diagnosis: userData.aiSummary + `\n\nBedankt voor uw aanvraag voor ${userData.service} van uw ${userData.device}. Wij hebben uw informatie ontvangen en nemen binnen 24 uur telefonisch contact met u op om een afspraak in te plannen.`
+                };
+
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, customerEmailData);
+
+                // Success message
+                document.getElementById('bookingForm').remove();
+                addBotMessage('✅ <strong>Aanvraag succesvol verzonden!</strong><br><br>Bedankt ' + name + '! Wij hebben uw aanvraag ontvangen en u heeft een bevestiging per e-mail ontvangen. Wij nemen binnen 24 uur telefonisch contact met u op.<br><br>U kunt dit venster nu sluiten.');
+                chatState = 'complete';
+
+            } catch (error) {
+                console.error('EmailJS Error:', error);
+                document.getElementById('bookingForm').innerHTML = '<p style="color: red; text-align:center;">Er ging iets mis bij het verzenden. Probeer het opnieuw.</p><button onclick="showBookingForm()">Opnieuw proberen</button>';
+                addBotMessage('⚠️ Er ging iets mis bij het verzenden. Probeer het opnieuw of neem direct contact met ons op via info@uberairco.nl');
+            }
+        }
     </script>
 </body>
 </html>
