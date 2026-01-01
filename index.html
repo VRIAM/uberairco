@@ -6,6 +6,9 @@
     <title>UberAirco | Airconditioning & Pompen Specialist Rotterdam</title>
     <meta name="description" content="STEK-gecertificeerd airconditioning en waterpomp specialist in Rotterdam. Installatie, reparatie en onderhoud. Binnen 24 uur reactie. Bel of start een chat.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%231a5276' d='M50 10 L55 30 L75 25 L60 40 L75 50 L60 60 L75 75 L55 70 L50 90 L45 70 L25 75 L40 60 L25 50 L40 40 L25 25 L45 30 Z'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%231a5276'/%3E%3C/svg%3E">
+
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
@@ -855,6 +858,17 @@
             50% { opacity: 0.7; transform: scale(1.2); }
         }
 
+        @keyframes chatButtonPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 16px rgba(230,126,34,0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 24px rgba(230,126,34,0.8), 0 0 20px rgba(230,126,34,0.4);
+            }
+        }
+
         /* Chat Dialog */
         .chat-dialog {
             margin: 0;
@@ -1059,6 +1073,13 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                animation: chatButtonPulse 2.5s ease-in-out infinite;
+                transition: transform 0.2s ease;
+            }
+            .desktop-chat-btn button:hover {
+                animation: none;
+                transform: scale(1.1);
+                box-shadow: 0 6px 28px rgba(230,126,34,0.9);
             }
             .desktop-chat-btn svg { width: 28px; height: 28px; fill: var(--white); }
             body.chat-open .desktop-chat-btn { display: none; }
