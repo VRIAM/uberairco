@@ -1757,13 +1757,18 @@
                     enableTextInput();
 
                     // Different first question based on service type
+                    let firstQuestion = '';
                     if (value === 'installatie') {
-                        addBotMessage('Voor welke ruimte is de installatie bedoeld? (bijv. woonkamer, slaapkamer, kantoor)');
+                        firstQuestion = 'Voor welke ruimte is de installatie bedoeld? (bijv. woonkamer, slaapkamer, kantoor)';
                     } else if (value === 'onderhoud') {
-                        addBotMessage('Welk merk en model heeft u?');
+                        firstQuestion = 'Welk merk en model heeft u?';
                     } else { // reparatie
-                        addBotMessage('Wat is het probleem precies met uw ' + userData.device.toLowerCase() + '?');
+                        firstQuestion = 'Wat is het probleem precies met uw ' + userData.device.toLowerCase() + '?';
                     }
+
+                    // Add first question to summary
+                    userData.aiSummary += `Assistent: ${firstQuestion}\n`;
+                    addBotMessage(firstQuestion);
                 }, 500);
             }
         }
